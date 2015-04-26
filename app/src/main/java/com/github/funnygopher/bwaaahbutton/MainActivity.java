@@ -85,8 +85,10 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onDestroy() {
-        mediaPlayer.stop();
-        mediaPlayer.release();
+        if(mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+        }
         super.onDestroy();
     }
 }
