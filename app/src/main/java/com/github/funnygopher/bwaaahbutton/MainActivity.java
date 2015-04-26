@@ -11,10 +11,22 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 
+import java.util.Random;
+
 public class MainActivity extends ActionBarActivity {
 
+    private Random rand = new Random();
     private Button bwaaahButton;
     private MediaPlayer mediaPlayer;
+
+    private final String[] QUOTES = new String[] {
+        "Dream a little bigger",
+        "You know what you have to do",
+        "Dreams feel real while we're in them",
+        "I'm asking you to take a leap of faith",
+        "Come back to reality",
+    };
+    private final String BWAAAH = "Bwaaah!";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,19 +34,20 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         bwaaahButton = (Button) findViewById(R.id.bwaaah_button);
+        bwaaahButton.setText(QUOTES[rand.nextInt(QUOTES.length)]);
         bwaaahButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        changeButtonText("Bwaaah!");
+                        changeButtonText(BWAAAH);
                         playSound();
                         Animation shake = AnimationUtils.loadAnimation(MainActivity.this, R.anim.shake);
                         bwaaahButton.startAnimation(shake);
                         break;
 
                     case MotionEvent.ACTION_UP:
-                        changeButtonText("Dream a Little Bigger");
+                        bwaaahButton.setText(QUOTES[rand.nextInt(QUOTES.length)]);
                         stopSound();
                         bwaaahButton.clearAnimation();
                         break;
@@ -42,29 +55,6 @@ public class MainActivity extends ActionBarActivity {
                 return false;
             }
         });
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private void playSound() {
