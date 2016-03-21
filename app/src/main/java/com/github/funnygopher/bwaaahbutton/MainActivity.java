@@ -58,27 +58,16 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void playSound() {
-        if(mediaPlayer == null) {
-            mediaPlayer = MediaPlayer.create(this, R.raw.inception);
-        }
-
+        mediaPlayer = MediaPlayer.create(this, R.raw.inception);
         mediaPlayer.start();
     }
 
     private void stopSound() {
-        mediaPlayer.pause();
-        mediaPlayer.seekTo(0);
+        mediaPlayer.stop();
+        mediaPlayer.release();
     }
 
     private void changeButtonText(String text) {
         bwaaahButton.setText(text);
-    }
-
-    public void onDestroy() {
-        if(mediaPlayer != null) {
-            mediaPlayer.stop();
-            mediaPlayer.release();
-        }
-        super.onDestroy();
     }
 }
