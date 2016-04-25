@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">Bwaaah</string>
 
-    <string name="drama_button">Add Drama</string>
-    <string name="action_settings">Settings</string>
+    <string name="bwaaah">BWAAAH!</string>
+
+    <string-array name="quotes">
+        <item>Dream a little bigger</item>
+        <item>You know what you have to do</item>
+        <item>Dreams feel real while we\'re in them</item>
+        <item>I\'m asking you to take a leap of faith</item>
+        <item>Come back to reality</item>
+        <item>Do you remember how you got here?</item>
+    </string-array>
 </resources>

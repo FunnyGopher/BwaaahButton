@@ -1,10 +1,11 @@
 package com.github.funnygopher.bwaaahbutton;
 
+import android.content.res.Resources;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -13,48 +14,63 @@ import android.widget.Button;
 
 import java.util.Random;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
-    private Random rand = new Random();
     private Button bwaaahButton;
     private MediaPlayer mediaPlayer;
 
-    private final String[] QUOTES = new String[] {
-        "Dream a little bigger",
-        "You know what you have to do",
-        "Dreams feel real while we're in them",
-        "I'm asking you to take a leap of faith",
-        "Come back to reality",
-    };
-    private final String BWAAAH = "Bwaaah!";
+    private Random rand;
+    private String[] quotes;
+    private String currQuote;
+    private String bwaaah;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // We need the volume rockers to control the music audio volume and not the ring volume
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+        rand = new Random(System.currentTimeMillis());
+
+        // Grab the quotes and bwaaah string from resources
+        Resources res = getResources();
+        quotes = res.getStringArray(R.array.quotes);
+        bwaaah = res.getString(R.string.bwaaah);
+        currQuote = "";
+
+        // Initialize the button
         bwaaahButton = (Button) findViewById(R.id.bwaaah_button);
-        bwaaahButton.setText(QUOTES[rand.nextInt(QUOTES.length)]);
+        changeQuote();
         bwaaahButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        changeButtonText(BWAAAH);
-                        playSound();
-                        Animation shake = AnimationUtils.loadAnimation(MainActivity.this, R.anim.shake);
-                        bwaaahButton.startAnimation(shake);
+                        onTouchDown();
                         break;
 
                     case MotionEvent.ACTION_UP:
-                        bwaaahButton.setText(QUOTES[rand.nextInt(QUOTES.length)]);
-                        stopSound();
-                        bwaaahButton.clearAnimation();
+                        onTouchUp();
                         break;
                 }
                 return false;
             }
         });
+    }
+
+    private void onTouchDown() {
+        bwaaahButton.setText(bwaaah);
+        playSound();
+        Animation shake = AnimationUtils.loadAnimation(MainActivity.this, R.anim.shake);
+        bwaaahButton.startAnimation(shake);
+    }
+
+    private void onTouchUp() {
+        changeQuote();
+        stopSound();
+        bwaaahButton.clearAnimation();
     }
 
     private void playSound() {
@@ -67,7 +83,13 @@ public class MainActivity extends ActionBarActivity {
         mediaPlayer.release();
     }
 
-    private void changeButtonText(String text) {
-        bwaaahButton.setText(text);
+    private void changeQuote() {
+        String newQuote;
+        do {
+            newQuote = quotes[rand.nextInt(quotes.length)];
+        } while(newQuote.equals(currQuote));
+
+        currQuote = newQuote;
+        bwaaahButton.setText(currQuote);
     }
 }
